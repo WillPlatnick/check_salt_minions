@@ -54,7 +54,7 @@ try:
       down_servers += server + " "
 except:
   print "OK"
-  exit(3)
+  exit(0)
 
 if down_servers:
   print "CRITICAL: " + down_servers
