@@ -31,10 +31,18 @@ try:
   child = subprocess.Popen(command, stdout=subprocess.PIPE)
   output = child.communicate()[0]
 except OSError, e:
-  print "UNKNOWN: Are you running this from the salt-master?"
+  print "UNKNOWN: salt doesn't appear to be installed"
   exit(3)
 
 yaml_out = yaml.load(output)
+
+try:
+  if not yaml_out['down'] and not yaml_out['up']:
+    print "UNKNOWN: Server has no minions attached to it"
+    exit(3)
+except:
+  print "UNKNOWN: Invalid JSON detected"
+  exit(3)
 
 try:
   for server in yaml_out['down']:
@@ -45,7 +53,7 @@ try:
     else:
       down_servers += server + " "
 except:
-  print "UNKNOWN: Non-valid YAML Detected"
+  print "OK"
   exit(3)
 
 if down_servers:
